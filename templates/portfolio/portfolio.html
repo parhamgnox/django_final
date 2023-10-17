@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'title' %}portfolio{% endblock 'title' %}
+
+{% block 'content' %}
+
+
+
+  <main id="main">
+
+
+
+  </main><!-- End #main -->
+  
+  <div class="single-sidebar-widget search-widget" align="center">
+    <form class="search-form" action="#">
+        <input placeholder="Search Posts" name="search" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Posts'">
+        <button type="submit">click</button>
+    </form>
+  </div>
+  
+<!-- ======= Portfolio Section ======= -->
+<section id="portfolio" class="portfolio">
+  <div class="container" data-aos="fade-up">
+
+    <div class="section-title">
+      <h2>Portfolio</h2>
+      <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+    </div>
+
+    <div class="row" data-aos="fade-up" data-aos-delay="150">
+      <div class="col-lg-12 d-flex justify-content-center">
+        <ul id="portfolio-flters">
+          <li data-filter="*" class="filter-active">All</li>
+          <li data-filter=".filter-app">App</li>
+          <li data-filter=".filter-card">Card</li>
+          <li data-filter=".filter-web">Web</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="300">
+      {% for pr in portfolio %}
+      <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+        <div class="portfolio-wrap">
+          <img src="{{ pr.image.url }}" class="img-fluid" alt="">
+          <div class="portfolio-info">
+            <h4>{{pr.capt}}</h4>
+            <p>{{pr.content|truncatechars:18}}</p>
+            <div class="d-flex align-items-center"> 
+
+              <p><strong>Trainer:</strong> <a href={% url 'portfolio:portfolio_team' team=pr.team_member.info.username%}>{{pr.team_member.info.username}}</a></p>
+            </div>
+            <p><strong>Likes:</strong> {{pr.counted_like}}</p>
+            <p><strong>Views:</strong> {{pr.counted_views}}</p>
+            <p><strong>Price:</strong> {{pr.price}}</p>
+            {% for cat in pr.category.all %}
+            <p><strong>category:</strong> {{cat.name}}</p>
+            {% endfor %}
+            <div class="portfolio-links">
+              <a href="{% static 'assets/img/portfolio/portfolio-1.jpg' %}" data-gallery="portfolioGallery" class="portfolio-lightbox" title="{{ pr.title }}"><i class="bx bx-plus"></i></a>
+              <a href="{% url 'portfolio:portfolio_details' id=pr.id %}" title="More Details"><i class="bx bx-link"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+       
+
+    </div>
+
+  </div>
+</section><!-- End Courses Section -->
+<div align="center" style="font-size:35px;">
+  {% if  portfolio.has_next and portfolio.has_previous %}
+  <a href="?page={{first_page}}"><<</a>
+  <a href="#">....</a>
+  <a href="?page={{portfolio.previous_page_number}}"><</a>
+  <a href="#">....</a>
+  <a href="?page={{portfolio.next_page_number}}">></a>
+  <a href="#">....</a>
+  <a href="?page={{last_page}}">>></a>
+  {% elif portfolio.has_next %}
+  <a href="?page={{portfolio.next_page_number}}">></a>
+  <a href="#">....</a>
+  <a href="?page={{last_page}}">>></a>
+  {% elif portfolio.has_previous %}
+  <a href="?page={{first_page}}"><<</a>
+  <a href="#">....</a>
+  <a href="?page={{portfolio.previous_page_number}}"><  </a>
+  {% endif %}
+
+</div>
+
+</main><!-- End #main -->
+{% endblock 'content' %}
