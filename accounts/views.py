@@ -20,21 +20,15 @@ def Login(request):
         captcha_form = CaptchaForm(request.POST)
         if captcha_form.is_valid():
 
-            if '@' in request.POST.get('username'):
-                try:
-                    username = CustomeUser.objects.get(email=request.POST.get('username').strip()).username
-                except:
-                    messages.add_message(request, messages.ERROR, 'Invalid username or password')
-                    return redirect(request.path_info)
-            else:
-                username = request.POST.get('username').strip()
+            
+            email = request.POST.get('email').strip()
             password = request.POST.get('password')      
-            user = authenticate(username=username, password=password)
+            user = authenticate(email=email, password=password)
             if user is not None:
                 login(request,user)
                 return redirect('/')
             else:
-                messages.add_message(request, messages.ERROR, 'Invalid username or password')
+                messages.add_message(request, messages.ERROR, 'Invalid email or password')
                 return redirect(request.path_info)
         else:
             messages.add_message(request, messages.ERROR, 'Invalid captcha')
@@ -61,17 +55,17 @@ def signup(request):
             form = CustomUserCreation(request.POST,request.FILES)
             if form.is_valid():
                 form.save()
-                username = request.POST.get('username')
+                email = request.POST.get('email')
                 password = request.POST.get('password1')
-                user = authenticate(username=username, password=password)
+                user = authenticate(email=email, password=password)
                 if user is not None:
                     login(request,user)
                     return redirect('/')
                 else:
-                    messages.add_message(request, messages.ERROR, 'Invalid username or password')
+                    messages.add_message(request, messages.ERROR, 'Invalid email or password')
                     return redirect(request.path_info)
             else:
-                messages.add_message(request, messages.ERROR, 'Invalid username or password')
+                messages.add_message(request, messages.ERROR, 'Invalid email or password')
                 return redirect(request.path_info)
             
         else:
