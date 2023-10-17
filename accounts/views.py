@@ -21,14 +21,14 @@ def Login(request):
         if captcha_form.is_valid():
 
             
-            email = request.POST.get('email').strip()
+            id_code = request.POST.get('id_code').strip()
             password = request.POST.get('password')      
-            user = authenticate(email=email, password=password)
+            user = authenticate(id_code=id_code, password=password)
             if user is not None:
                 login(request,user)
                 return redirect('/')
             else:
-                messages.add_message(request, messages.ERROR, 'Invalid email or password')
+                messages.add_message(request, messages.ERROR, 'Invalid id_code or password')
                 return redirect(request.path_info)
         else:
             messages.add_message(request, messages.ERROR, 'Invalid captcha')
@@ -55,17 +55,17 @@ def signup(request):
             form = CustomUserCreation(request.POST,request.FILES)
             if form.is_valid():
                 form.save()
-                email = request.POST.get('email')
+                id_code = request.POST.get('id_code')
                 password = request.POST.get('password1')
-                user = authenticate(email=email, password=password)
+                user = authenticate(id_code=id_code, password=password)
                 if user is not None:
                     login(request,user)
                     return redirect('/')
                 else:
-                    messages.add_message(request, messages.ERROR, 'Invalid email or password')
+                    messages.add_message(request, messages.ERROR, 'Invalid id_code or password')
                     return redirect(request.path_info)
             else:
-                messages.add_message(request, messages.ERROR, 'Invalid email or password')
+                messages.add_message(request, messages.ERROR, 'Invalid id_code or password')
                 return redirect(request.path_info)
             
         else:
