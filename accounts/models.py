@@ -1,16 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser,BaseUserManager,PermissionsMixin
 
+import phonenumbers
+
 class CustomeBaseUserManager(BaseUserManager):
-    def create_user(self, phone_number, password, **extra_fields):
+    def create_user(self, phone_number, password=None, **extra_fields):
         if not phone_number:
-            raise ValueError('The given phone number must be set')
-        user = self.model(phone_number=phone_number, **extra_fields)
+            raise ValueError('The phone number field must be set')
+
+        # Normalize the phone number
+        normalized_phone_number = phonenumbers.parse(phone_number, None)
+        if not phonenumbers.is_valid_number(normalized_phone_number):
+            raise ValueError('Invalid phone number')
+
+        normalized_phone_number = phonenumbers.format_number(normalized_phone_number, phonenumbers.PhoneNumberFormat.E164)
+
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+
+        user = self.model(phone_number=normalized_phone_number, **extra_fields)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
-    
-    
+
     def create_superuser(self, phone_number, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)

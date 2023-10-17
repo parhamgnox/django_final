@@ -11,3 +11,4 @@ rcssmin==1.1.1
 rjsmin==1.2.1
 sqlparse==0.4.4
 tzdata==2023.3
+phonenumbers==8.13.23
