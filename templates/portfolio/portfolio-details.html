@@ -64,11 +64,26 @@
                 <li><strong>Price</strong>: ${{portfolio.price}}</li>
               </ul>
             </div>
+            
             <div class="portfolio-description">
               <h2>{{portfolio.title}}</h2>
               <p>
                 {{portfolio.content}}
               </p>
+            </div>
+            <div class="course-info d-flex justify-content-between align-items-center">
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{course.id}}"> 
+                <input type="text" name="quantity"> 
+                <button type="submit">Add To Cart</button>
+              </form>
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{course.id}}"> 
+               
+                <button type="submit">Delete From Cart</button>
+              </form>
             </div>
 
           </div>

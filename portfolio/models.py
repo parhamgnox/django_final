@@ -34,8 +34,6 @@ class Team_Members(models.Model):
 
 class Portfolio(models.Model):
     image = models.ImageField(upload_to='portfolio',default='default.png')
-    image_2 = models.ImageField(upload_to='portfolio',default='default.png')
-    image_3 = models.ImageField(upload_to='portfolio',default='default.png')
     title = models.CharField(max_length=90)
     category = models.ManyToManyField(Category)
     content = models.TextField()

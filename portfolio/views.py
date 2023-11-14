@@ -3,9 +3,6 @@ from .models import *
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from root.forms import ContactUsForm , NewsLetterForm
 from django.contrib import messages
-from .forms import CommentForm , ReplyForm
-from django.contrib.auth.decorators import login_required
-
 
 def portfolio(request,cat=None, team=None):
     
@@ -112,65 +109,5 @@ def portfolio_details(request,id):
         except:
             return render(request,'portfolio/404.html')
 
-    elif request.method == 'POST' and len(request.POST) > 2:
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request,messages.SUCCESS,'your comment has submitted and published as soon')
-            return redirect(request.path_info)
-            
-        else:
-            messages.add_message(request,messages.ERROR,'yor comment data is not valid')
-            return redirect (request.path_info)
 
 
-
-@login_required
-def delete_comment(request, id):
-    comment = Comment.objects.get(id=id)
-    cid = comment.which_portfolio.id
-    comment.delete()
-    return redirect(f'/portfolio/portfolio_details/{cid}')
-
-@login_required
-def edit(request, id):
-    comment = Comment.objects.get(id=id)
-    if request.method == 'GET':
-        
-
-        context = {
-            'comment' : comment,
-        }
-        return render(request,'portfolio/edit.html',context=context)
-    
-    elif request.method == 'POST' :
-        form = CommentForm(request.POST,instance=comment)
-        if form.is_valid():
-            form.save()
-            cid = comment.which_portfolio.id
-            return redirect (f'/portfolio/portfolio_details/{cid}')
-        else:
-            messages.add_message(request,messages.ERROR,'chete baba ba in data dadanet .... zereshk')
-            return redirect(request.path_info)
-
-@login_required
-def reply(request, id):
-    comment = Comment.objects.get(id=id)
-    if request.method == 'GET':
-        form = ReplyForm()
-
-        context = {
-            'comment' : comment,
-            'form' : form,
-        }
-        return render(request,'portfolio/reply.html',context=context)
-    
-    elif request.method == 'POST' :
-        form = ReplyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            cid = comment.which_portfolio.id
-            return redirect (f'/portfolio/portfolio_details/{cid}')
-        else:
-            messages.add_message(request,messages.ERROR,'chete baba ba in data dadanet .... zereshk')
-            return redirect (request.path_info)
