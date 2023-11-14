@@ -12,7 +12,7 @@ class CustomUserCreation(UserCreationForm):
 
     class Meta:
         model = CustomeUser
-        fields = ('id_code', 'password1', 'password2')
+        fields = ('email', 'password1', 'password2')
 
 
 class CaptchaForm(forms.Form):
